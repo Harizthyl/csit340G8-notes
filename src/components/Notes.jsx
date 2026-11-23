@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import NoteCard from "./NoteCard";
 
 function Notes() {
@@ -14,24 +14,24 @@ function Notes() {
       body: "Practice writing one handler for many inputs.",
     },
   ];
-  
+
   const [notes, setNotes] = useState(() => {
     const saved = localStorage.getItem("notes");
     return saved ? JSON.parse(saved) : startingNotes;
-  })
+  });
   const [form, newForm] = useState({ title: "", body: "" });
   const [search, setSearch] = useState("");
   const titleRef = useRef(null);
 
   useEffect(() => {
-    localStorage.setItem("notes", JSON.stringify(notes))
+    localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
   useEffect(() => {
     const id = setTimeout(() => {
-      localStorage.setItem("draft", JSON.stringify(form))
-    }, 1000)
-    return  () => clearTimeout(id)
+      localStorage.setItem("draft", JSON.stringify(form));
+    }, 1000);
+    return () => clearTimeout(id);
   }, [form]);
 
   function handleChange(e) {
@@ -67,9 +67,11 @@ function Notes() {
     setNotes(notes.filter((note) => note.id !== id));
   }
 
-  const filteredNotes = notes.filter((note) =>
-    note.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredNotes = useMemo(() => {
+    return notes.filter((note) =>
+      note.title.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [notes, search]);
 
   return (
     <div className="grid min-h-screen grid-cols-[420px_1fr]">
@@ -140,7 +142,6 @@ function Notes() {
             </li>
           ))}
         </ul>
-
 
         {filteredNotes.length === 0 && (
           <p className="text-lg text-[#949494]">No notes found</p>
