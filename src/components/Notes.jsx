@@ -15,15 +15,13 @@ function Notes() {
     },
   ]);
 
-  const [newNote, setNewNote] = useState({ title: "", body: "" });
-
-
+  const [form, newForm] = useState({ title: "", body: "" });
   const [search, setSearch] = useState("");
 
-  function handleNewNoteChange(e) {
+  function handleChange(e) {
     const { name, value } = e.target;
-    setNewNote({
-      ...newNote,
+    newForm({
+      ...form,
       [name]: value,
     });
   }
@@ -31,8 +29,8 @@ function Notes() {
   function handleSubmit(e) {
     e.preventDefault();
 
-    const trimTitle = newNote.title.trim();
-    const trimBody = newNote.body.trim();
+    const trimTitle = form.title.trim();
+    const trimBody = form.body.trim();
 
     if (trimTitle === "" || trimBody === "") {
       return;
@@ -45,7 +43,7 @@ function Notes() {
     };
 
     setNotes([...notes, newNoteToWrite]);
-    setNewNote({ title: "", body: "" });
+    newForm({ title: "", body: "" });
   }
 
   function handleDelete(id) {
@@ -82,15 +80,15 @@ function Notes() {
           </p>
           <input
             name="title"
-            value={newNote.title}
-            onChange={handleNewNoteChange}
+            value={form.title}
+            onChange={handleChange}
             placeholder="Title"
             className="h-[52px] w-full border border-[#e6e6e6] px-4 text-lg outline-none placeholder:text-black/40 placeholder:italic focus:border-[#cf7d7d]"
           />
           <textarea
             name="body"
-            value={newNote.body}
-            onChange={handleNewNoteChange}
+            value={form.body}
+            onChange={handleChange}
             placeholder="Write your note"
             className="h-[120px] w-full resize-none py-3 border border-[#e6e6e6] px-4 text-lg outline-none placeholder:text-black/40 placeholder:italic focus:border-[#cf7d7d]"
           />
